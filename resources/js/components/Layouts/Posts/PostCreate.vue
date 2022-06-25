@@ -6,7 +6,6 @@
 		</v-btn>
 		<!-- Post Create Dialog  -->
 		<v-dialog v-model="dialog" min-height="1000" width='700'>
-			<v-app>
 			<v-card>
 				<v-card-title class="text-info">
 					Post Create 
@@ -23,6 +22,9 @@
 					        <span>
 					        	<b class=""> {{ user.name }}</b>
 					        </span>
+							<span>
+								
+							</span>
 						</div>
 						<div class="col-2"></div>
 						<div class="col-2 bottom-right pull-right">
@@ -54,12 +56,13 @@
 									    </v-radio-group>
 									</v-list-item-title>
 								</v-list-item>
-
+								<!--  Divider  -->
+								<v-divider></v-divider>
 								<v-list-item>
 									<v-list-item-title>
 									 <v-menu>
 									 	<template v-slot:activator="{ on,attrs}">
-									 		<v-btn v-bind="attrs" v-on='on'>
+									 		<v-btn block v-bind="attrs" v-on='on'>
 									 			<span v-if="post.text_color == ''">
 									 				Select text color 
 									 			</span>
@@ -109,11 +112,15 @@
 									</v-list-item-title>
 								</v-list-item>
 
+								<!--  Divider  -->
+								<v-divider></v-divider>
+
 								<v-list-item>
 									<v-list-item-title>
 										<v-menu>
 											<template v-slot:activator="{ on,attrs}">
 												<v-btn 
+													block
 													v-bind='attrs' v-on="on">
 													<span v-if="post.feeling != ''">
 														{{ post.feeling }}
@@ -143,6 +150,9 @@
 									</v-list-item-title>
 								</v-list-item>
 
+								<!--  Divider  -->
+								<v-divider></v-divider>
+
 								<v-list-item>
 									<v-list-item-title>
 										<el-checkbox v-model="post.comment_open">Comment Open</el-checkbox> 
@@ -157,6 +167,26 @@
 									</v-list-item-title>
 								</v-list-item>
 
+								<v-divider></v-divider>
+
+								<v-list-item align='center' justify='center'>
+									<v-list-item-title class="text-center " >
+										<el-upload
+											action="http://127.0.0.1:8000/api/image-upload"
+											:before-upload="beforeUpload"
+											:multiple="true"
+											>
+											<!-- <v-icon>mdi-plus</v-icon> -->
+												<el-tooltip class="item" effect="light" content="Add Phato" placement="top-start">
+													<v-btn block color="lighten-1" class="text-center">
+														<v-icon>mdi-camera-enhance</v-icon>
+													</v-btn>
+												</el-tooltip>
+										</el-upload>
+									</v-list-item-title>
+								</v-list-item>
+
+								
 
 
 							</v-list>
@@ -165,38 +195,45 @@
 					</div>
 
 					<!--  body  -->
-					<div class="d-flex flex-column my-2 ">
 						<!-- Status textarea box  -->
 							<v-textarea
 							  clearable
 						      clear-icon="mdi-close-circle"	  
-						      class="btn-block col-12 "
-					          solo
+					          :rules="content_rule"
 					          v-model='post.status'
 					          label="Something write here..."
 					 		  height="auto"
 					        ></v-textarea>
 						<!-- Image Box  -->
-						<div class="col-12 justify-content-center">
-						    <el-upload
-					            action="http://127.0.0.1:8000/api/image-upload"
-					            :before-upload="beforeUpload"
-					  			list-type="picture-card"
-					  			:limit='image_limit'
+						    
+							<v-carousel v-if="post.images != null">
+								<v-carousel-item
+								v-for="(item,i) in PostImagePre"
+								:key="i"
+								:src="item"
 								>
-								<v-icon>mdi-camera</v-icon>
-					  		 </el-upload>
-						</div>
-					</div>
+								
+								<v-row class="fill-height" align="center" justify="center">
+									<el-upload
+										class="d-flex align-item-center justify-content-center"
+										action="http://127.0.0.1:8000/api/image-upload"
+										:before-upload="beforeUpload"
+										:multiple="true"
+										:show-file-list="false"
+										>
+										<button class="glass-button btn btn-lg px-5 mx-5" > 
+											<v-icon>mdi-plus</v-icon>
+										</button>
+									</el-upload>
+								</v-row>
+					
+								</v-carousel-item>
+							</v-carousel>
 				</v-card-text>
-				<v-divider></v-divider>
 				<v-card-actions>
-					<v-btn>Clear</v-btn>
-					<v-spacer></v-spacer>
-					<v-btn @click="SubmitPost">Post</v-btn>
+					<v-btn @click="SubmitPost" block color="cyan--text lighten-1">Post</v-btn>
 				</v-card-actions>
 			</v-card>
-			</v-app>
 		</v-dialog>
 	</div>
 	<!-- Trash  -->
@@ -208,16 +245,15 @@
 		data(){
 			return {
 				dialog:false,
-				image_limit:1,
 				CloseOnContentClick:false,
 				token:localStorage.getItem('token'),
+				PostImagePre:[],
 				user:{},
 				profile_phato:'',
-				image_limit:1,
 				post:{
 					user_id:'',
 					status:'',
-					image:null,
+					images:null,
 					share_open:true,
 					comment_open:true,
 					reach_to:'public',
@@ -225,6 +261,10 @@
 					feeling:''
 
 				},
+				content_rule: [
+        			value => !!value || 'Required.',
+        			value => (value && value.length >= 1) || 'Min 1 characters',
+      			],
 				reachTO:['public','friends'],
 				feels:[
 				{label:'happy',value:'Happy 🥰'},
@@ -246,22 +286,55 @@
         	  if (!isLt2M) {
           		this.$message.error(' picture size can not exceed 2MB!');
         		}
-        	  this.post.image = file;
+			  if(this.post.images != null){
+				  
+				  this.post.images.push(file)
+			  }else {
+				  this.post.images = [];
+				  this.post.images.push(file)
+			  }
+			  var  reader = new FileReader
+				reader.onload = e => {
+					this.PostImagePre.push(e.target.result);
+				}
+				reader.readAsDataURL(file);
+			  console.log(this.post.images)
       		},
       		SubmitPost(){
       			// Creating Post Form 
       			var form = new FormData();
       			form.append('user_id',this.user.id);
       			form.append('status',this.post.status);
-      			form.append('image',this.post.image);
       			form.append('text_color',this.post.text_color);
+				  // Images appending to FormData
+				  this.post.images.forEach((item,index) => {
+					  form.append(`images[${index}]`,item);
+					  console.log(item)
+				  })
+
       			form.append('feeling',this.post.feeling);
       			form.append('reach_to',this.post.reach_to);
       			form.append('comment_open',this.post.comment_open);
       			form.append('share_open',this.post.share_open);
       			var poster = axios.post('api/post/create',form);
       			poster.then((res) => {
-      				console.log(res.data)
+      				if(res.data != 1){
+						  this.$message.error('Something is wrong! Try Again');
+					  }else {
+						  this.$message.success('Post Created!');
+						  this.dialog = false;
+						  this.post = {
+								user_id:'',
+								status:'',
+								images:null,
+								share_open:true,
+								comment_open:true,
+								reach_to:'public',
+								text_color:'',
+								feeling:''
+
+							}
+					  }
       			})
 
 
@@ -278,3 +351,12 @@
 		},
 	};
 </script>
+
+
+<style>
+.glass-button {
+   background: rgba(255,255,255,.10);
+   box-shadow: 0 5px 5px rgba(0,0,0.2);
+ }
+
+</style>

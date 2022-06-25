@@ -8,22 +8,23 @@
         v-model="dialog"
         max-width="600px"
       >
-        <v-card>
+        <v-card  class="">
           <v-card-title>
             <span>Register  </span>
-            <v-spacer></v-spacer>
    
           </v-card-title>
           
 
-          <v-card-text>
-          <div class="header">Profile Phato </div>
+          <v-card-text  >
+          <div class="header d-flex flex-column align-items-center justify-content-center">Profile Phato </div>
           <el-upload
+			class="avatar-uploader  d-flex flex-column align-items-center justify-content-center"
             action="http://127.0.0.1:8000/api/image-upload"
             :before-upload="beforeUpload"
-  			list-type="picture-card"
+			:on-success="handleAvatarSuccess"
 			>
-			<v-icon>mdi-camera</v-icon>
+			<img v-if="form.Image" :src="imageUrl" class="avatar">
+			<i v-else class="el-icon-plus avatar-uploader-icon"></i>
   		  </el-upload>
 
 
@@ -155,6 +156,13 @@
         		}
         	  this.form.Image = file;
       		},
+			 handleRemove(file, fileList) {
+				console.log(file, fileList);
+			},
+			// Profile Image Success 
+			handleAvatarSuccess(res, file) {
+				this.imageUrl = URL.createObjectURL(file.raw);
+			},
       		// REGISTER FROM SUBMIT FUNCTION 
       		Submit(){
           // create form data 
@@ -167,7 +175,7 @@
       		form.append('password',this.form.password);
           this.from = form;
           // Register
-          var auth = axios.post('/api/register',form);
+          var auth = axios.post(`/api/register`,form);
           auth.then((response) => {
             if(response.data != 'fail'){
               // setting LocalStorage Item
@@ -185,6 +193,8 @@
                     user_id: this.user.id,
                   });
                   this.$emit('logined','done');
+				  this.$message.success('Register Success!');
+				  this.$message.success('Login Success!');
 
                 })
             }
@@ -195,3 +205,28 @@
 		}
 	};
 </script>
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>

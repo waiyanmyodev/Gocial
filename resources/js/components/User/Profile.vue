@@ -206,7 +206,7 @@
 		},
 		methods:{
 			UpdateDetails(){
-				axios.post('api/details',{user_id:this.user.id}).then((response) => {
+				axios.post(`/api/details`,{user_id:this.user.id}).then((response) => {
 				   var details = response.data;
 				   this.details = details[0]
 				 });
@@ -218,14 +218,18 @@
 				window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
 				axios.post('api/user').then((response) => {
 				 this.user = response.data;
-				 this.profile_phato = 'ProfilePhato/'+response.data.profile_phato;
+				 this.profile_phato = `/ProfilePhato/`+response.data.profile_phato;
 				 axios.post('api/details',{user_id:this.user.id}).then((response) => {
 				   var details = response.data;
 				   this.details = details[0]
 				 });
 				 // Getting Post For User
 				 axios.post(`api/post/${this.user.id}`).then((res) => {
-				 	this.posts =  res.data;
+					 var post = res.data;
+					 var post = post.sort(function(a,b) {
+						 return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+					 })	
+					 this.posts = post;
 				  });  
 
 

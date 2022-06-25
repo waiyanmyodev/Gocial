@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('user_id');
             $table->string('content');
-            $table->text('phato');
+            $table->text('phato')->nullable();
             $table->string('likes');
             $table->string('comments');
             $table->string('shares');

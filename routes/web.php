@@ -18,13 +18,7 @@ Route::get('/', function () {
 });
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-Route::get('/c/date', "PostController@index");
 
-
-Route::get('post/comment',"CommentsController@index");
-
-
-Route::get('cmt/{id}', "CommentsController@show");
+Route::get('{id}', "PostController@whoLikedThePost");

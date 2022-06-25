@@ -61,7 +61,7 @@
 		},
 		methods:{
 			Submit(){
-				axios.post('api/login',this.form).then((response) => {
+				axios.post(`/api/login`,this.form).then((response) => {
 				  if(response.data != 'fail'){
 				  	localStorage.setItem('token',response.data);
 				  this.token = localStorage.getItem('token');

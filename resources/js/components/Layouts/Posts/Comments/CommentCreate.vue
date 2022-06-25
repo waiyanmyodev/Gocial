@@ -34,7 +34,7 @@
 					user_id:this.user.id,
 					content:this.content
 				};
-				axios.post('api/comment/create',form).then((res) => {
+				axios.post('/api/comment/create',form).then((res) => {
 					if(res.data == 1){
 						this.content = null;
 					}
@@ -44,7 +44,7 @@
 			}
 		},
 		mounted(){
-			axios.post('api/user').then((res) => {
+			axios.post('/api/user').then((res) => {
 				this.user = res.data;
 			})
 		}

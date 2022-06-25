@@ -46,7 +46,7 @@
                                      </v-list-item>
                                      <v-list-item>
                                         <v-list-item-title>
-                                            <router-link to="profile">profile</router-link>
+                                            <router-link to="/profile" class="link">profile</router-link>
                                         </v-list-item-title>
                                      </v-list-item>
                                     </v-list>
@@ -76,19 +76,28 @@
         methods:{
             Logout(){
                 this.login = false;
+                this.token = null;
                 localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('user_id');
             },
             Login(){
                 this.login = true;
+                axios.post(`/api/user`).then((response) => {
+                    this.user =  response.data;
+                    localStorage.setItem('user',response.data)
+                    localStorage.setItem('user_id',response.data.id)
+                });
             }
         },
         mounted(){
             if(this.token != null){
             this.login = true;
             window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
-            axios.post('api/user').then((response) => {
+            axios.post(`/api/user`).then((response) => {
               this.user =  response.data;
               localStorage.setItem('user',response.data)
+              localStorage.setItem('user_id',response.data.id)
             });
         }
         

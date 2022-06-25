@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->post('/user', function (Request $request) {
 
 });
 
-
+// Auth 
 Route::post('/register',"Auth\AuthController@register" );
 Route::post('/login',"Auth\AuthController@login" );
 
@@ -26,7 +26,7 @@ Route::post('/login',"Auth\AuthController@login" );
 Route::middleware(['auth:sanctum'])->group(function () {
 	// Post 
 	Route::post('/post/create', 'PostController@create');
-	Route::post('/post/delete',"PostController@destory");
+	Route::post('/post/{id}/delete',"PostController@destroy");
 	Route::post('/post/edit',"PostController@edit");
 	Route::post('/post/date/{id}', "PostController@date");
 	Route::post('/post/user/{id}',"PostController@userData");
@@ -34,18 +34,27 @@ Route::middleware(['auth:sanctum'])->group(function () {
 	Route::post('/post/iflike/{id}/{user_id}', "PostController@ifLike");
 	Route::post('/post/like/{id}/{user_id}', "PostController@Like");
 	Route::post('/post/unlike/{id}/{user_id}', "PostController@UnLike");
+	Route::post('/post/like/{id}', "PostController@whoLikedThePost");
 
 	// Comment 
 	Route::post('/comment/create', "CommentsController@create");
 	Route::post('/comment/{id}', "CommentsController@show");
+	Route::post('/comment/date/{id}',"CommentsController@Date");
+	Route::post('/comment/user/{id}',"CommentsController@UserData");
+
 
 	// Profile Details 
 	Route::post('/detail-add',"DetailsController@create" );
 	Route::post('/details/edit',"DetailsController@edit" );
 	Route::post('/details',"DetailsController@show" );
 
-});
+	// Profile View 
+	Route::post('/profile/{id}',"ProfileController@GetUser");
 
+
+});
+  // For Image Uploader Actions 
 Route::post('image-upload', function() {
     //
 });
+

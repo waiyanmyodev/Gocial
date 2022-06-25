@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Models\User;
 class CommentsController extends Controller
 {
     /**
@@ -64,11 +65,33 @@ class CommentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function Date($id)
     {
-        //
+        $post =  Comment::find($id);
+        $datetime = array(
+            'years'=>date_format($post->created_at,'Y'),    
+            'month'=>date_format($post->created_at,'M'),    
+            'months'=>date_format($post->created_at,'m'),    
+            'day'=>date_format($post->created_at,'D'),    
+            'days'=>date_format($post->created_at,'d'),    
+            'hour'=>date_format($post->created_at,'h'),    
+            'secounds'=>date_format($post->created_at,'s'),    
+            'minutes'=>date_format($post->created_at,'i'),    
+
+        );
+        return $datetime;
     }
 
+    public function UserData($id)
+    {
+        # code...
+        $user = User::find($id);
+        $user_ary = array();
+        $user_ary['id'] = $user->id;
+        $user_ary['name'] = $user->name;
+        $user_ary['profile_phato'] = $user->profile_phato;
+        return $user_ary;
+    }
     /**
      * Update the specified resource in storage.
      *
