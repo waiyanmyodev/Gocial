@@ -42,18 +42,67 @@
 
 	    
 
-		<v-menu >
+		<v-menu v-if="user.id == post.user_id ? true : false" :close-on-content-click='false' >
 			<template  v-slot:activator="{ on , attr }">
 				<v-btn fab icon v-bind="attr" v-on="on">
 					<v-icon>mdi-dots-vertical</v-icon>
 				</v-btn>	
 			</template>		
-			<v-list>
-				<v-list-item v-for="item in MoreOptions" :key="item.title">
-					<v-list-item-title v-if="item.access == true">
-						<v-btn block v-on:click="item.function" >
-							{{ item.title }} <v-icon>{{ item.icon }}</v-icon>
+			<v-list >
+				<!-- Post Edit Function -->
+				<v-list-item >
+					<v-list-item-title v-if="user.id == post.user_id ? true : false" >
+						<v-btn block @click="PostEditDialog = true ">
+						 	Edit <v-icon>mdi-playlist-edit</v-icon>
 						</v-btn>
+
+						<v-dialog
+							v-model="PostEditDialog"
+							scrollable  persistent
+							min-height="1000" width='700'
+							transition="dialog-transition"
+						>
+							<EditPost :original_post="post" @done="PostEditDialog = false" />
+						</v-dialog>
+					</v-list-item-title>
+				</v-list-item>
+				<!-- Delete Post Function  -->
+				<v-list-item v-if="user.id == post.user_id ? true : false" >
+					<v-list-item-title >
+						<v-btn block @click="DelConfirm = true" >
+							Delete Post <v-icon>mdi-trash</v-icon>
+						</v-btn>
+						<v-dialog
+						
+							v-model="DelConfirm"
+							persistent :overlay="false"
+      						max-width="290"
+							transition="dialog-transition"
+						>
+							<v-card>
+								<v-card-title class="text-h5">
+									Are You Sure To Delete This Post ?
+								</v-card-title>
+								<v-card-text>This post will be can't recover.</v-card-text>
+								<v-card-actions>
+								<v-spacer></v-spacer>
+								<v-btn
+									color="green darken-1"
+									text
+									@click="DelConfirm = false"
+								>
+									Cancel
+								</v-btn>
+								<v-btn
+									color="red darken-1"
+									text
+									@click="DeletePost"
+								>
+									Confirm
+								</v-btn>
+								</v-card-actions>
+							</v-card>
+						</v-dialog>
 					</v-list-item-title>
 				</v-list-item>
 			</v-list>
@@ -87,9 +136,9 @@
 
 							<v-list-item-content>
 							<v-list-item-title >
-								<router-link :to="`/profile/user/${people.id}`" class='name black--text' >
+								<b @click="$router.push({path:`/profile/user/${people.id}`})" class='name black--text' >
 									{{ people.name  }}
-								</router-link>
+								</b>
 							</v-list-item-title>
 							</v-list-item-content>
 
@@ -170,6 +219,7 @@
 <script type="text/javascript">
 	import CommentCreate from './Comments/CommentCreate';
 	import ShowAllComment from './Comments/ShowAllComment';
+	import EditPost from './EditPost';
 	export default {
 		props:['post'],
 		data(){
@@ -193,20 +243,8 @@
 				comments:null,
 				cmtbox:false,
 				profile:'/profile/user/'+this.post.user_id,
-				MoreOptions:[
-					{
-						'title':'Edit ',
-						'icon':'mdi-playlist-edit',
-						'function':this.EditThePost,
-						'access':true
-					},
-					{
-						'title':'Delete Post',
-						'icon':'mdi-trash-can-outline',
-						'function':this.DeletePost,
-						'access':localStorage.getItem('user_id') == this.post.user_id ? true : false
-					},
-				],
+				DelConfirm:false,
+				PostEditDialog:false,
 				whoLikeMyPost:false,
 				likedPeoples:[]
 			}
@@ -283,6 +321,7 @@
 					axios.post(`/api/post/${this.post.id}/delete`,{user_id:this.user.id}).then((res) => {
 						if(res.data == '1'){
 							this.$message.success('Post Deleted!')
+							this.DelConfirm = false;
 						}
 					})
 				}
@@ -309,7 +348,7 @@
 			this.GetComments();
 		},
 		// Components 
-		components:{CommentCreate,ShowAllComment}
+		components:{CommentCreate,ShowAllComment,EditPost}
 	};
 </script>
 <style>

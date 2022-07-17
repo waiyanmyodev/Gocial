@@ -26,6 +26,7 @@ Route::post('/login',"Auth\AuthController@login" );
 Route::middleware(['auth:sanctum'])->group(function () {
 	// Post 
 	Route::post('/post/create', 'PostController@create');
+	Route::post('/post/update', 'PostController@update');
 	Route::post('/post/{id}/delete',"PostController@destroy");
 	Route::post('/post/edit',"PostController@edit");
 	Route::post('/post/date/{id}', "PostController@date");
@@ -50,6 +51,26 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 	// Profile View 
 	Route::post('/profile/{id}',"ProfileController@GetUser");
+
+	// Friends
+	Route::post('friend/add',"FriendsController@AddTo");
+	Route::post('friend/is-pendding',"FriendsController@isPendding");
+	Route::post('friend/is-request',"FriendsController@ifRequest");
+	Route::post('friend/get-fri-req',"FriendsController@getFriendRequests");
+	Route::post('friend/get-fri-pending',"FriendsController@GetPendingFriendships");
+	Route::post('friend/accept',"FriendsController@Accept");
+	Route::post('friend/deny',"FriendsController@deny");
+	Route::post('friend/block',"FriendsController@block");
+	Route::post('friend/UnBlock',"FriendsController@unblock");
+	Route::post('friend/unfriend',"FriendsController@Unfriend");
+	Route::post('friend/all-friends',"FriendsController@AllFriends");
+	Route::post('friend/get-friends-count',"FriendsController@GetFriendsCount");
+	Route::post('friend/block-list',"FriendsController@BlockList");
+	Route::post('friend/is-friend',"FriendsController@isFriendWith");
+	Route::post('friend/matual-fri',"FriendsController@GetMutualFriends");
+	
+	// New Feed 
+	Route::post('new-feed',"NewFeedController@GetPost");
 
 
 });

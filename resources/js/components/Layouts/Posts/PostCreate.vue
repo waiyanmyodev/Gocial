@@ -172,7 +172,7 @@
 								<v-list-item align='center' justify='center'>
 									<v-list-item-title class="text-center " >
 										<el-upload
-											action="http://127.0.0.1:8000/api/image-upload"
+											:action='`/api/image-upload`'
 											:before-upload="beforeUpload"
 											:multiple="true"
 											>
@@ -309,7 +309,6 @@
 				  // Images appending to FormData
 				  this.post.images.forEach((item,index) => {
 					  form.append(`images[${index}]`,item);
-					  console.log(item)
 				  })
 
       			form.append('feeling',this.post.feeling);
@@ -343,7 +342,7 @@
 		mounted(){
 			axios.post('api/user').then((response) => {
 			  // TODO
-			  this.profile_phato = 'ProfilePhato/'+response.data.profile_phato;
+			  this.profile_phato = `/ProfilePhato/`+response.data.profile_phato;
 			  this.user = response.data;
 
 			});

@@ -21,4 +21,4 @@ Route::get('/', function () {
 
 
 
-Route::get('{id}', "PostController@whoLikedThePost");
+Route::get('/tester/{id}', "ProfileController@Tester");

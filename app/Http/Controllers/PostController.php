@@ -196,4 +196,28 @@ class PostController extends Controller
         }
         return json_encode($peoples);
     }
+
+    public function update(Request $request){
+        // it is fucking crazy but usefull
+        function may_true($val)
+        {
+            if ($val == 'true') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        $post = Post::find($request->id);
+        $post->content = $request->content;
+        $post->comment_open = may_true($request->comment_open);
+        $post->share_open = may_true($request->share_open);
+        $post->reach_to = $request->reach_to;
+        $post->text_color = $request->text_color;
+        $post->feeling = $request->feeling;
+        if($post->update()){
+            return json_encode(true);
+        }else {
+            return json_encode(false);
+        }
+    }
 }

@@ -17,9 +17,9 @@
                     <div class="col-8 d-flex flex-column">
                         <div>
                             
-                            <router-link :to='profile' class='name black--text' >
+                            <b  @click="$router.push({path:`/profile/user/${comment.user_id}`,replace:true})" class='name black--text' >
                                 {{ UserData.name  }}
-                            </router-link>
+                            </b>
                         </div>
                         <!-- Date Time  -->
                         <div>

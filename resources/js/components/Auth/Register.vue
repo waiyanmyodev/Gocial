@@ -19,7 +19,7 @@
           <div class="header d-flex flex-column align-items-center justify-content-center">Profile Phato </div>
           <el-upload
 			class="avatar-uploader  d-flex flex-column align-items-center justify-content-center"
-            action="http://127.0.0.1:8000/api/image-upload"
+            :action='`/api/image-uploader`'
             :before-upload="beforeUpload"
 			:on-success="handleAvatarSuccess"
 			>
