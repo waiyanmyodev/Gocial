@@ -32,11 +32,20 @@ class NewFeedController extends Controller
             }
          }
 
-         $posts = array();
+         $tmp = array();
         foreach($users_id as $id){
             $post = Post::where('user_id',$id)->first();
-            $posts[] = $post;
+            if(Post::where('user_id',$id)->first()){
+               $user_data = array();
+               $user_data['id'] = User::find($id)->id;
+               $user_data['name'] = User::find($id)->name;
+               $user_data['profile_phato'] = User::find($id)->profile_phato;
+               $post['user_data'] =  $user_data; 
+               $tmp[] = $post;
+            }
         }
-        return $posts;
+        array_shift($tmp);
+        return json_encode($tmp);
+        
     }
 }

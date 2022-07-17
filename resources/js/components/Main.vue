@@ -77,7 +77,7 @@
 
 		
 		<v-container   style="height: 1000px;">
-			<router-view class="router" :key="$route.path"></router-view>
+			<router-view :key="$route.path"></router-view>
 		</v-container>
 		</v-sheet>
 

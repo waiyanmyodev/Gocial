@@ -217,9 +217,9 @@
 	</v-card>
 </template>
 <script type="text/javascript">
-	import CommentCreate from './Comments/CommentCreate';
-	import ShowAllComment from './Comments/ShowAllComment';
-	import EditPost from './EditPost';
+import CommentCreate from '../Posts/Comments/CommentCreate.vue';
+import ShowAllComment from '../Posts/Comments/ShowAllComment';
+import EditPost from '../Posts/EditPost';
 	export default {
 		props:['post'],
 		data(){
