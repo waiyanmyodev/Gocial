@@ -42,16 +42,32 @@
 
 	    
 
-		<v-menu v-if="user.id == post.user_id ? true : false" :close-on-content-click='false' >
+		<v-menu :close-on-content-click='false' >
 			<template  v-slot:activator="{ on , attr }">
 				<v-btn fab icon v-bind="attr" v-on="on">
 					<v-icon>mdi-dots-vertical</v-icon>
 				</v-btn>	
 			</template>		
-			<v-list >
+			<v-list>
+				<!-- Save Button Function -->
+				<v-list-item v-if="save == false ">
+					<v-list-item-title>
+						<v-btn block @click="SavePost">
+						 	Save Post <v-icon>mdi-book-plus</v-icon>
+						</v-btn>
+					</v-list-item-title>
+				</v-list-item>
+
+				<v-list-item v-if="save == true ">
+					<v-list-item-title>
+						<v-btn block @click="UnSavePost">
+						 	UnSave Post <v-icon>mdi-book-minus</v-icon>
+						</v-btn>
+					</v-list-item-title>
+				</v-list-item>
 				<!-- Post Edit Function -->
-				<v-list-item >
-					<v-list-item-title v-if="user.id == post.user_id ? true : false" >
+				<v-list-item v-if="user.id == post.user_id ? true : false">
+					<v-list-item-title  >
 						<v-btn block @click="PostEditDialog = true ">
 						 	Edit <v-icon>mdi-playlist-edit</v-icon>
 						</v-btn>
@@ -237,7 +253,8 @@ import EditPost from '../Posts/EditPost';
 				DelConfirm:false,
 				PostEditDialog:false,
 				whoLikeMyPost:false,
-				likedPeoples:[]
+				likedPeoples:[],
+				save:null
                 
 			}
 		},
@@ -296,6 +313,45 @@ import EditPost from '../Posts/EditPost';
 				axios.post(`/api/post/like/${this.post.id}`).then((res) => {
 					this.likedPeoples = res.data;
 				})
+			},
+			// Save The Post 
+			SavePost(){
+				var data = {
+					user_id:this.user.id,
+					save_category_id:this.post.id,
+					save_type:"Post"
+				}
+				axios.post(`/api/post/save`,data).then((res) => {
+					if(res.data == true){
+						this.$message.success('Post Saved!');
+						this.IfSavePost()
+					}else {
+					}
+				})
+			},
+			UnSavePost(){
+				var data = {
+					user_id:this.user.id,
+					save_category_id:this.post.id,
+					save_type:"Post"
+				}
+				axios.post(`/api/post/unsave`,data).then((res) => {
+					if(res.data == true){
+						this.$message.success('Post Unsaved!');
+						this.IfSavePost()
+					}else {
+					}
+				})
+			},
+			IfSavePost(){
+				var data = {
+					user_id:this.user.id,
+					save_category_id:this.post.id,
+					save_type:"Post"
+				}
+				axios.post(`/api/post/ifsave`,data).then((res) => {
+					this.save = res.data;
+				})
 			}
 
 
@@ -306,6 +362,7 @@ import EditPost from '../Posts/EditPost';
 			this.CurrentUser();
 			this.DatePicker();
 			this.GetComments();
+			this.IfSavePost();
 		},
 		// Components 
 		components:{CommentCreate,ShowAllComment,EditPost}

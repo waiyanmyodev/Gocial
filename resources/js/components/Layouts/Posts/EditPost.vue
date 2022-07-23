@@ -165,12 +165,6 @@
 										<v-icon>mdi-share</v-icon>
 									</v-list-item-title>
 								</v-list-item>
-
-
-
-								
-
-
 							</v-list>
 						  </v-menu>
 						</div>
@@ -186,19 +180,6 @@
 					          label="Something write here..."
 					 		  height="auto"
 					        ></v-textarea>
-						<!-- Image Box  -->
-						    
-							<!-- <v-carousel v-if="post.images != null">
-								<v-carousel-item
-								v-for="(item,i) in PostImagePre"
-								:key="i"
-								:src="item"
-								>
-								
-								
-					
-								</v-carousel-item>
-							</v-carousel> -->
 				</v-card-text>
 				<v-card-actions>
 					<v-btn @click="UpdatePost" block color="cyan--text lighten-1">Save</v-btn>

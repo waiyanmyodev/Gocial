@@ -3,6 +3,7 @@
 		<v-text-field
         label="Something Write Here..."
         solo
+		class="rounded-lg "
         v-model='content'
     >
     	<v-icon

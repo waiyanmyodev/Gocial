@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-btn @click="dialog = true">
+		<v-btn @click="dialog = true" text block>
 			Login
             <i class="el-icon-d-arrow-right"></i>
 		</v-btn>

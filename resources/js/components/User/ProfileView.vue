@@ -1,4 +1,4 @@
-<!-- Template  -->
+profile<!-- Template  -->
 <template>
 	<div>
 
@@ -45,7 +45,7 @@
 				      	<b>About {{ profile_user.name }} </b>
 				      </v-subheader>
 				      <v-list-item-group
-				        color="cyan "
+				        color="primary lighten-2  "
 				      >
 				      <!-- Friends -->
 				        <FriendsView  /> 
@@ -222,6 +222,15 @@
 							<el-button  type="danger"  block style="color:white"  class="col" @click="Block()" >
 									Block <v-icon>mdi-account-cancel</v-icon>
 							</el-button>
+							<v-divider></v-divider>
+							<el-button type="info" block class="col" style="color:white" v-if="save  == false" @click="SaveUser">
+								Add To Save 
+								<v-icon>mdi-book-plus</v-icon> 
+							</el-button>
+							<el-button type="info" block class="col" style="color:white" v-if="save  == true" @click="UnSaveUser">
+								Unsave 
+								<v-icon>mdi-book-minus</v-icon>  
+							</el-button>
 					  </v-card-text>
 				  </v-card>
 			  </v-dialog>
@@ -264,7 +273,8 @@
 					request:null,
 					pendding:null,
 				},
-				viewMore:false
+				viewMore:false,
+				save:null
 			}
 		},
 		methods:{
@@ -333,6 +343,45 @@
 						this.friendship.pendding = false;
 					}
 				})
+			},
+			// Save The Post 
+			SaveUser(){
+				var data = {
+					user_id:this.user.id,
+					save_category_id:this.$route.params.id,
+					save_type:"User"
+				}
+				axios.post(`/api/user/save`,data).then((res) => {
+					if(res.data == true){
+						this.$message.success('User Saved!');
+						this.IfSaveUser()
+					}else {
+					}
+				})
+			},
+			UnSaveUser(){
+				var data = {
+					user_id:this.user.id,
+					save_category_id:this.$route.params.id,
+					save_type:"User"
+				}
+				axios.post(`/api/user/unsave`,data).then((res) => {
+					if(res.data == true){
+						this.$message.success('User Unsaved!');
+						this.IfSaveUser()
+					}else {
+					}
+				})
+			},
+			IfSaveUser(){
+				var data = {
+					user_id:this.user.id,
+					save_category_id:this.$route.params.id,
+					save_type:"User"
+				}
+				axios.post(`/api/user/ifsave`,data).then((res) => {
+					this.save = res.data;
+				})
 			}
 		},
 		created(){
@@ -380,7 +429,7 @@
 				});
 			};
 
-			
+			this.IfSaveUser();
 			// end 
 		},
 		

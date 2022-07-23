@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 class FriendsController extends Controller
 {
     public function AddTo(Request $request)
@@ -84,7 +85,7 @@ class FriendsController extends Controller
     public function UnBlock(Request $request)
     {
         $user = User::find($request->user_id);
-        $friend = User::find($request->friend_id);
+        $friend = User::find($request->friends_id);
         if($user->unblockFriend($friend)){
             return json_encode(true);
         }else {
@@ -125,8 +126,23 @@ class FriendsController extends Controller
 
     public function BlockList(Request $request)
     {
-        $user = User::find($request->user_id);
-        return $user->getBlockedFriendships();
+        $auth = User::find($request->user_id);
+        $blocklist=  $auth->getBlockedFriendships();
+        $block_users = array();
+        foreach ($blocklist as $item) {
+            $user = array();
+            if($auth->id == $item->recipient_id){
+                $user_data = User::find($item->sender_id);
+                $user['id'] = $user_data->id;
+                $user['name'] = $user_data->name;
+                $user['profile_phato'] = $user_data->profile_phato;
+                $user['mutual_friends'] = $auth->getMutualFriendsCount($user_data);
+                $block_users[] = $user;
+            }
+            
+            
+        }
+        return $block_users;
     }
 
     public function isFriendWith(Request $request)

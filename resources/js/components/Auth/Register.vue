@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-btn @click="dialog = true">
+		<v-btn @click="dialog = true" text block>
 		  Register
           <i class="el-icon-user-solid"></i>
         </v-btn>

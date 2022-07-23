@@ -1,6 +1,6 @@
 <template>
-    <div v-if="show != false">
-            <Post :post="post"  v-for='(post,id) in posts' :key='id'  />
+    <div v-if="show != false" >
+            <Post :post="post"  v-for='(post,id) in posts' :key='id'   />
     </div>
 </template>
 

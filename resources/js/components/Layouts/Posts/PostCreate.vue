@@ -1,14 +1,17 @@
 <template>
 	<div>
 		<!--  Post Create Button  -->
-		<v-btn text color='cyan lighten-1' @click="dialog = true">
-			Create Post <v-icon></v-icon>
-		</v-btn>
+		
 		<!-- Post Create Dialog  -->
-		<v-dialog v-model="dialog" min-height="1000" width='700'>
+		<v-dialog v-model="dialog" min-height="1000" width='700' scrollable  persistent >
 			<v-card>
-				<v-card-title class="text-info">
-					Post Create 
+				<v-card-title>
+					Post Create <v-icon>mdi-newspaper-variant</v-icon>
+
+					<v-spacer></v-spacer>
+                    <v-btn  icon color="black" @click="$emit('close',false)">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
 				</v-card-title>
 				<v-divider></v-divider>
 				<v-card-text>
@@ -242,9 +245,9 @@
 </template>
 <script type="text/javascript">
 	export default {
+		props:['dialog'],
 		data(){
 			return {
-				dialog:false,
 				CloseOnContentClick:false,
 				token:localStorage.getItem('token'),
 				PostImagePre:[],

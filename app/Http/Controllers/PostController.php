@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Like;
+use App\Models\Save;
 use DateTime;
 
 class PostController extends Controller
@@ -220,4 +221,71 @@ class PostController extends Controller
             return json_encode(false);
         }
     }
+
+    public function SavePost(Request $req){
+        $data = Save::where('user_id',$req->user_id)
+                    ->where('save_category_id',$req->save_category_id)
+                    ->where('save_type',$req->save_type)
+                    ->first();
+        if($data == null){
+            $save = new Save;
+            $save->user_id = $req->user_id;
+            $save->save_category_id = $req->save_category_id;
+            $save->save_type = $req->save_type;
+            if($save->save()){
+                return json_encode(true);
+            }
+        }else {
+            return json_encode(false);
+        }
+        
+    }
+
+    public function UnSavePost(Request $req){
+        $data = Save::where('user_id',$req->user_id)
+                    ->where('save_category_id',$req->save_category_id)
+                    ->where('save_type',$req->save_type)
+                    ->first();
+        if($data != null){
+            $save = Save::find($data->id);
+            if($save->delete()){
+                return json_encode(true);
+            }
+        }else {
+            return json_encode(false);
+        }
+        
+    }
+
+    public function IfSavePost(Request $req){
+        $data = Save::where('user_id',$req->user_id)
+                    ->where('save_category_id',$req->save_category_id)
+                    ->where('save_type',$req->save_type)
+                    ->first();
+        if($data == null){
+            return json_encode(false);
+        }else {
+            return json_encode(true);
+        }
+    }
+
+    public function SavePosts($id)
+    {
+        $save = Save::where('user_id', $id)->where('save_type','Post')->get();
+        $posts= array();
+        foreach ($save as $data) {
+            $id = $data->save_category_id;
+            $post = Post::find( $data->save_category_id);
+            if(Post::find( $data->save_category_id)){
+               $user_data = array();
+               $user_data['id'] = User::find( $post->user_id)->id;
+               $user_data['name'] = User::find( $post->user_id)->name;
+               $user_data['profile_phato'] = User::find( $post->user_id)->profile_phato;
+               $post['user_data'] =  $user_data; 
+               $posts[] = $post;
+            }
+        }
+        return $posts;
+    }
+
 }

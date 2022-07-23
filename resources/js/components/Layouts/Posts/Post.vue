@@ -1,5 +1,5 @@
 <template>
-	<v-card class="my-3 ">
+	<v-card class="my-5rounded-lg " >
 		<v-card-title>
 		 <div class="row">
 			 <!-- Post Owner Image  -->

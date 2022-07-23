@@ -1,6 +1,6 @@
 <template>
   <v-app>
-	  <v-card >
+	  <v-card v-if="login == true">
 		  <!-- Gocial App Bar   -->
 		<v-app-bar
 		:collapse-on-scroll="collapseOnScroll"
@@ -39,7 +39,7 @@
 		<!-- Message Box  -->
 		<div class="justify-content-start align-item-start py-3  ">
 			<div class="col-5">
-				<v-btn  icon outlined>
+				<v-btn olor="black" icon outlined text>
 					<v-icon>mdi-forum</v-icon>
 				</v-btn>
 			</div>
@@ -63,7 +63,7 @@
 				Friends <v-icon>el-icon-user-solid</v-icon>
 			</v-tab>
 
-			<v-tab>Setting <v-icon>mdi-cog</v-icon></v-tab>
+			<v-tab @click="$router.push(`/setting`)">Setting <v-icon>mdi-cog</v-icon></v-tab>
 			</v-tabs>
 		</template>
 		</v-app-bar>
@@ -73,10 +73,11 @@
 		id="scrolling-techniques-6"
 		class="overflow-y-auto my-5 py-5 "
 		max-height="550"
+		max-width="auto"
 		>
 
 		
-		<v-container   style="height: 1000px;">
+		<v-container   style="height: 1000px;" class="my-5 mb-5 ">
 			<router-view :key="$route.path"></router-view>
 		</v-container>
 		</v-sheet>
@@ -105,15 +106,37 @@
 					</v-list-item>
 
 					<v-list-item v-if='login == true'>
-						<PostCreate />
+						<v-btn block text   @click="post_create = true"  class="col">
+							Create Post <v-icon>mdi-newspaper-variant</v-icon>
+						</v-btn>
+						<PostCreate :dialog='post_create' @close="ClosePostCreate" />
 					</v-list-item>
 
+					<v-list-item v-if='login == true'>
+						<v-btn    text  block @click="$router.push(`/save`)" >
+							Save <v-icon>mdi-book</v-icon>
+						</v-btn>
+					</v-list-item>
 					
 					
-
+	
 				</v-list-item-group>
 			</v-list>
     	</v-navigation-drawer>
+	</v-card>
+	<v-card v-if="login == false">
+		<v-app-bar
+		elevation="4"
+		outlined
+		rounded
+		>
+		<v-toolbar-title>
+			<router-link to='/' class='navbar-brand text-black'>Gocial </router-link>
+		</v-toolbar-title>
+		<v-spacer></v-spacer>
+		<Register @logined="Login"  />
+		<Login @logined="Login" />
+		</v-app-bar>
 	</v-card>
   </v-app>
 </template>
@@ -130,6 +153,7 @@
                 collapseOnScroll:true,
 				drawer: false,
      			 group: null,
+				  post_create:false
             }
         },
         methods:{
@@ -147,7 +171,10 @@
                     localStorage.setItem('user',response.data)
                     localStorage.setItem('user_id',response.data.id)
                 });
-            }
+            },
+			ClosePostCreate(){
+				this.post_create = false;
+			}
         },
         mounted(){
             if(this.token != null){
@@ -155,7 +182,10 @@
             window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
             axios.post(`/api/user`).then((response) => {
               this.user =  response.data;
-              localStorage.setItem('user',response.data)
+
+              localStorage.setItem('user_email',this.user.email)
+              localStorage.setItem('user_name',this.user.name);
+              localStorage.setItem('user_profile_phato',this.user.profile_phato);
               localStorage.setItem('user_id',response.data.id)
             });
         }

@@ -24,19 +24,10 @@
 				      	<b>About {{ user.name }} </b>
 				      </v-subheader>
 				      <v-list-item-group
-				        color="red"
+				        color="primary  lighten-2 "
 				      >
 				      <!-- Friends -->
-				        <v-list-item>
-				          <v-list-item-content>
-				            <v-list-item-title> 
-				            	<b>Friends</b>
-				            </v-list-item-title>
-				          </v-list-item-content>
-				          <v-list-item-icon>
-				            <v-icon>el-icon-user-solid</v-icon>
-				          </v-list-item-icon>
-				        </v-list-item>
+				        <MyFriends /> 
 				        <!--  Email -->
 				        <v-list-item>
 				        	<v-list-item-content>
@@ -191,8 +182,9 @@
 
 <!--  javascript  -->
 <script type="text/javascript">
- 	import ProfileDetails from './Details';
- 	import Post from '../Layouts/Posts/Post';
+import ProfileDetails from './Details';
+import Post from '../Layouts/Posts/Post';
+import MyFriends from './MyFriends';
 	export default {
 		data(){
 			return {
@@ -239,7 +231,7 @@
 
 			// end 
 		},
-		components:{ProfileDetails,Post}
+		components:{ProfileDetails,Post,MyFriends}
 	};
 </script>
 

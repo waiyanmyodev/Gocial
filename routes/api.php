@@ -27,6 +27,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 	// Post 
 	Route::post('/post/create', 'PostController@create');
 	Route::post('/post/update', 'PostController@update');
+	Route::post('/post/save', 'PostController@SavePost');
+	Route::post('/post/save/{id}', 'PostController@SavePosts');
+	Route::post('/post/unsave', 'PostController@UnSavePost');
+	Route::post('/post/ifsave', 'PostController@IfSavePost');
 	Route::post('/post/{id}/delete',"PostController@destroy");
 	Route::post('/post/edit',"PostController@edit");
 	Route::post('/post/date/{id}', "PostController@date");
@@ -51,6 +55,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 	// Profile View 
 	Route::post('/profile/{id}',"ProfileController@GetUser");
+	Route::post('/user/save',"ProfileController@SaveUser");
+	Route::post('/user/unsave',"ProfileController@UnSaveUser");
+	Route::post('/user/ifsave',"ProfileController@IfSaveUser");
+	Route::post('/user/saves/{id}',"ProfileController@SaveUsers");
+	Route::post('/user/name_update',"ProfileController@ChangeName");
+	Route::post('/user/password_update',"ProfileController@ChangePassword");
+	
 
 	// Friends
 	Route::post('friend/add',"FriendsController@AddTo");

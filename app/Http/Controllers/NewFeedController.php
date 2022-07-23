@@ -44,7 +44,6 @@ class NewFeedController extends Controller
                $tmp[] = $post;
             }
         }
-        array_shift($tmp);
         return json_encode($tmp);
         
     }

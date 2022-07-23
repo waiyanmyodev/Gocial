@@ -3,6 +3,8 @@ import Profile from './components/User/Profile';
 import ProfileView from './components/User/ProfileView';
 import Friends from './components/User/Friends';
 import NewFeed from './components/Layouts/NewFeed/NewFeed';
+import SaveItemFeed from './components/Layouts/Save/SaveItemFeed';
+import Setting from './components/Layouts/Setting/Setting';
 export default {
 	mode:'history',
 	routes:[
@@ -28,6 +30,17 @@ export default {
 			path:'/newfeed',
 			name:'newfeed',
 			component:NewFeed
-		}
+		},
+
+		{
+			path:'/save',
+			name:'save',
+			component:SaveItemFeed
+		},
+		{
+			path:'/setting',
+			name:'setting',
+			component:Setting
+		},
 	]
 }
