@@ -18,7 +18,9 @@ Route::get('/', function () {
 });
 
 
+Route::get('/test', function () {
+    return event(new App\Events\MyEvent("tset"));
+});
 
 
 
-Route::get('/tester/{id}', "ProfileController@Tester");

@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Like;
 use App\Models\Save;
+use Illuminate\Support\Facades\Auth;
 use DateTime;
 
 class PostController extends Controller
@@ -115,8 +116,51 @@ class PostController extends Controller
     public function PostAll($id)
     {
         $posts = Post::where('user_id', $id)->get();
-        return $posts;
+        $tmp = array();
+        foreach($posts as $item){
+            $user_data = array();
+            $user_data['id'] = User::find($item->user_id)->id;
+            $user_data['name'] = User::find($item->user_id)->name;
+            $user_data['profile_phato'] = User::find($item->user_id)->profile_phato;
+            $item['user_data'] =  $user_data; 
+            $tmp[] = $item;
+        }
+        return json_encode($tmp);
     }
+
+    public function FriPostAll(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $friend = User::find($request->friend_id);
+        if($user->isFriendWith($friend)){
+            $tmp = array();
+            $posts = Post::where('user_id', $request->friend_id)->get();
+            foreach($posts as $item){
+                $user_data = array();
+                $user_data['id'] = User::find($item->user_id)->id;
+                $user_data['name'] = User::find($item->user_id)->name;
+                $user_data['profile_phato'] = User::find($item->user_id)->profile_phato;
+                $item['user_data'] =  $user_data; 
+                $tmp[] = $item;
+            }
+            return json_encode($tmp);
+        }else {
+            $tmp = array();
+            $posts = Post::where('user_id', $request->friend_id)->where('reach_to','public')->get();
+            foreach($posts as $item){
+                $user_data = array();
+                $user_data['id'] = User::find($item->user_id)->id;
+                $user_data['name'] = User::find($item->user_id)->name;
+                $user_data['profile_phato'] = User::find($item->user_id)->profile_phato;
+                $item['user_data'] =  $user_data; 
+                $tmp[] = $item;
+            }
+            return json_encode($tmp);
+        }
+        
+        
+    }
+
 
     /*
                     LIKE System 

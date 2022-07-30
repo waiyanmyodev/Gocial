@@ -144,6 +144,17 @@ class FriendsController extends Controller
         }
         return $block_users;
     }
+    
+    public function ifBlock(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $friend = User::find($request->friend_id);
+        if($user->hasBlocked($friend)){
+            return json_encode(true);
+        }else {
+            return json_encode(false);
+        }
+    }
 
     public function isFriendWith(Request $request)
     {

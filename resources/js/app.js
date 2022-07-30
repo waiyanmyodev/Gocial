@@ -1,7 +1,7 @@
 
 require('./bootstrap');
 window.Vue = require('vue').default;
-
+import Pusher from 'pusher-js';
 import VueRoute from 'vue-router';
 import routes from './routes';
 import ElementUI from 'element-ui';

@@ -1,8 +1,8 @@
-profile<!-- Template  -->
+<!-- Template  -->
 <template>
-	<div>
+	<div >
 
-	  <div class="container bootstrap snippet">
+	  <div class="container bootstrap snippet" v-if="friendship.block == false">
 	    <div class="row">
 	  		<div class="col-xs-12 col-md-3 col-sm-12 col-lg-3 "><!--left col-->
 	      <div class="text-center">
@@ -36,7 +36,7 @@ profile<!-- Template  -->
 
 	      </div><br> 
 				  <v-card
-				    class="mx-auto"
+				    class="mx-auto col-12 col-lg-4 "
 				    max-width="350"
 				    tile
 				  >
@@ -250,6 +250,26 @@ profile<!-- Template  -->
 	    </div><!--/row-->
 		<!-- -->
 	</div>
+	<v-dialog
+		v-model="friendship.block" 
+		persistent
+		max-width="500px"
+		transition="dialog-transition"
+	>
+		<v-card>
+
+			<v-card-title>
+
+					<h3 class="headline mb-0">Blocked User</h3>
+					<v-spacer></v-spacer>
+					<v-icon @click="$router.push(`/`)">mdi-close</v-icon>
+			</v-card-title>
+			<v-divider></v-divider>
+			<v-card-text>
+				<div>you can't access this content now.</div>
+			</v-card-text>
+		</v-card>
+	</v-dialog>
 	</div>
 </template>
 
@@ -401,14 +421,15 @@ profile<!-- Template  -->
 				   this.details = details[0]
 				 });
 				 // Getting Post For User
-				 axios.post(`/api/post/${this.$route.params.id}`).then((res) => {
+				 const data = {
+					 user_id:localStorage.getItem('user_id'),
+					 friend_id:this.$route.params.id,
+				 };
+				 axios.post(`/api/user/posts`,data).then((res) => {
 				 	this.posts =  res.data;
 				  });  
 				 // Checking User is friend
-				 const data = {
-					 user_id:this.user.id,
-					 friend_id:this.$route.params.id,
-				 };
+				 
 				 // Checking User is friend with you 
 				 axios.post(`/api/friend/is-friend`,data).then((res) => {
 					 this.friendship.friend = res.data;
@@ -421,6 +442,11 @@ profile<!-- Template  -->
 				// Checking User is request to you
 				 axios.post(`/api/friend/is-request`,data).then((res) => {
 					 this.friendship.request = res.data;
+				 })
+
+				 // Checking User is block
+				 axios.post(`/api/friend/ifblock`,data).then((res) => {
+					 this.friendship.block = res.data;
 				 })
 				if(this.user.id == this.$route.params.id){
 					this.$router.push(`/profile`)

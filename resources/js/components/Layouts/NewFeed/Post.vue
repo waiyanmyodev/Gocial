@@ -1,179 +1,172 @@
 <template>
 	<v-card class="my-5 rounded-lg " >
-		<v-card-title>
-		 <div class="row">
-			 <!-- Post Owner Image  -->
-			<div class="col-2 col-md-1 mr-lg-2 ">
-				<v-avatar color="grey darken-3">
-			          <v-img
-			            class="elevation-6 "
-			            alt=""
-			            :src="`/ProfilePhato/`+post.user_data.profile_phato"
-			          ></v-img>
-			    </v-avatar>
-			</div>
-			<div class="col-8 d-flex flex-column">
-				<!-- Post  Owner User Name  -->
-				<div>
-					
-			        <b>
-						<router-link :to='profile' class='name black--text' >
-							{{ post.user_data.name  }}
-						</router-link>
-						<span v-if="post.feeling != 'none'" class="font-weight-regular subtitle-1">
-			        	 	  {{ empty }} {{ post.feeling }}
-			        	</span>
-			        </b>
-				</div>
-				<!-- Post Date Time  -->
-				<div>
-					<b class='text-muted font-weight-regular subtitle-1'>
-	        			{{date.years }} {{ date.months }}  {{ date.days }}
-	        			<v-icon v-if="post.reach_to == 'public'">mdi-earth</v-icon>
-
-	        			<v-icon v-if="post.reach_to == 'friends'">mdi-account-multiple</v-icon>
-	        		</b>
-				</div>
-			</div>
-
-		 </div>
-
-			<v-spacer></v-spacer>
-
-	    
-
-		<v-menu :close-on-content-click='false' >
-			<template  v-slot:activator="{ on , attr }">
-				<v-btn fab icon v-bind="attr" v-on="on">
-					<v-icon>mdi-dots-vertical</v-icon>
-				</v-btn>	
-			</template>		
-			<v-list>
-				<!-- Save Button Function -->
-				<v-list-item v-if="save == false ">
-					<v-list-item-title>
-						<v-btn block @click="SavePost">
-						 	Save Post <v-icon>mdi-book-plus</v-icon>
-						</v-btn>
-					</v-list-item-title>
-				</v-list-item>
-
-				<v-list-item v-if="save == true ">
-					<v-list-item-title>
-						<v-btn block @click="UnSavePost">
-						 	UnSave Post <v-icon>mdi-book-minus</v-icon>
-						</v-btn>
-					</v-list-item-title>
-				</v-list-item>
-				<!-- Post Edit Function -->
-				<v-list-item v-if="user.id == post.user_id ? true : false">
-					<v-list-item-title  >
-						<v-btn block @click="PostEditDialog = true ">
-						 	Edit <v-icon>mdi-playlist-edit</v-icon>
-						</v-btn>
-
-						<v-dialog
-							v-model="PostEditDialog"
-							scrollable  persistent
-							min-height="1000" width='700'
-							transition="dialog-transition"
-						>
-							<EditPost :original_post="post" @done="PostEditDialog = false" />
-						</v-dialog>
-					</v-list-item-title>
-				</v-list-item>
-				<!-- Delete Post Function  -->
-				<v-list-item v-if="user.id == post.user_id ? true : false" >
-					<v-list-item-title >
-						<v-btn block @click="DelConfirm = true" >
-							Delete Post <v-icon>mdi-trash</v-icon>
-						</v-btn>
-						<v-dialog
+			<v-list class="col">
+			<v-list-item >
+				<v-list-item-avatar size="50">
+					<v-img  :src="`/ProfilePhato/`+post.user_data.profile_phato">
 						
-							v-model="DelConfirm"
-							persistent :overlay="false"
-      						max-width="290"
-							transition="dialog-transition"
-						>
-							<v-card>
-								<v-card-title class="text-h5">
-									Are You Sure To Delete This Post ?
-								</v-card-title>
-								<v-card-text>This post will be can't recover.</v-card-text>
-								<v-card-actions>
-								<v-spacer></v-spacer>
-								<v-btn
-									color="green darken-1"
-									text
-									@click="DelConfirm = false"
-								>
-									Cancel
-								</v-btn>
-								<v-btn
-									color="red darken-1"
-									text
-									@click="DeletePost"
-								>
-									Confirm
-								</v-btn>
-								</v-card-actions>
-							</v-card>
-						</v-dialog>
-					</v-list-item-title>
-				</v-list-item>
-			</v-list>
-			
-		</v-menu>
-		<v-dialog
-				v-model="whoLikeMyPost"
-				max-width="500px"
-				height="500px"
-			>
-				<v-card>
-					<v-card-title color="cyan  lighten-3">
+					</v-img>
+				</v-list-item-avatar>
+				<v-list-item-content>
+					<v-list-item-title @click="$router.push(`/profile/user/${post.user_data.id}`)">
 						<div>
-							<h3 class="headline mb-0">Who Like The Post ? </h3>
-						</div>
-					</v-card-title>
-					<v-card-text>
-						<v-list subheader>
-						<v-subheader>Liked Peoples</v-subheader>
+							<b>
+								<router-link :to='profile' class='name black--text ' >
+									{{ post.user_data.name  }}
+								</router-link>
+								<span v-if="post.feeling != 'none'" class="font-weight-regular subtitle-1">
+									{{ empty }} {{ post.feeling }}
+								</span>
+							</b>
+						</div> 
+					</v-list-item-title>
+					<v-list-item-subtitle>
+						<b class='text-muted font-weight-regular subtitle-1'>
+							{{date.years }} {{ date.months }}  {{ date.days }}
+							<v-icon v-if="post.reach_to == 'public'">mdi-earth</v-icon>
 
-						<v-list-item
-							v-for="people in likedPeoples"
-							:key="people.name"
-						>
-							<v-list-item-avatar>
-							<v-img
-								:alt="`${people.name} avatar`"
-								:src="`/ProfilePhato/`+people.phato"
-							></v-img>
-							</v-list-item-avatar>
-
-							<v-list-item-content>
-							<v-list-item-title >
-								<b @click="$router.push({path:`/profile/user/${people.id}`})" class='name black--text' >
-									{{ people.name  }}
-								</b>
+							<v-icon v-if="post.reach_to == 'friends'">mdi-account-multiple</v-icon>
+						</b>
+					</v-list-item-subtitle>
+				</v-list-item-content>
+				<v-spacer></v-spacer>
+				<v-list-item-icon>
+					<v-menu :close-on-content-click='false' >
+					<template  v-slot:activator="{ on , attr }">
+						<v-btn fab icon v-bind="attr" v-on="on">
+							<v-icon>mdi-dots-vertical</v-icon>
+						</v-btn>	
+					</template>		
+					<v-list>
+						<!-- Save Button Function -->
+						<v-list-item v-if="save == false ">
+							<v-list-item-title>
+								<v-btn block @click="SavePost">
+									Save Post <v-icon>mdi-book-plus</v-icon>
+								</v-btn>
 							</v-list-item-title>
-							</v-list-item-content>
-
-							<v-list-item-icon>
-							<v-icon color="primary">
-								mdi-thumb-up
-							</v-icon>
-							</v-list-item-icon>
 						</v-list-item>
-						</v-list>
-			
-					</v-card-text>
-					<v-card-actions>
-						
-					</v-card-actions>
-				</v-card>
-			</v-dialog>
+
+						<v-list-item v-if="save == true ">
+							<v-list-item-title>
+								<v-btn block @click="UnSavePost">
+									UnSave Post <v-icon>mdi-book-minus</v-icon>
+								</v-btn>
+							</v-list-item-title>
+						</v-list-item>
+						<!-- Post Edit Function -->
+						<v-list-item v-if="user.id == post.user_id ? true : false">
+							<v-list-item-title  >
+								<v-btn block @click="PostEditDialog = true ">
+									Edit <v-icon>mdi-playlist-edit</v-icon>
+								</v-btn>
+
+								<v-dialog
+									v-model="PostEditDialog"
+									scrollable  persistent
+									min-height="1000" width='700'
+									transition="dialog-transition"
+								>
+									<EditPost :original_post="post" @done="PostEditDialog = false" />
+								</v-dialog>
+							</v-list-item-title>
+						</v-list-item>
+						<!-- Delete Post Function  -->
+						<v-list-item v-if="user.id == post.user_id ? true : false" >
+							<v-list-item-title >
+								<v-btn block @click="DelConfirm = true" >
+									Delete Post <v-icon>mdi-trash</v-icon>
+								</v-btn>
+								<v-dialog
+								
+									v-model="DelConfirm"
+									persistent :overlay="false"
+									max-width="290"
+									transition="dialog-transition"
+								>
+									<v-card>
+										<v-card-title class="text-h5">
+											Are You Sure To Delete This Post ?
+										</v-card-title>
+										<v-card-text>This post will be can't recover.</v-card-text>
+										<v-card-actions>
+										<v-spacer></v-spacer>
+										<v-btn
+											color="green darken-1"
+											text
+											@click="DelConfirm = false"
+										>
+											Cancel
+										</v-btn>
+										<v-btn
+											color="red darken-1"
+											text
+											@click="DeletePost"
+										>
+											Confirm
+										</v-btn>
+										</v-card-actions>
+									</v-card>
+								</v-dialog>
+							</v-list-item-title>
+						</v-list-item>
+					</v-list>
+					
+				</v-menu>
+				<v-dialog
+						v-model="whoLikeMyPost"
+						max-width="500px"
+						height="500px"
+					>
+						<v-card>
+							<v-card-title color="cyan  lighten-3">
+								<div>
+									<h3 class="headline mb-0">Who Like The Post ? </h3>
+								</div>
+							</v-card-title>
+							<v-card-text>
+								<v-list subheader>
+								<v-subheader>Liked Peoples</v-subheader>
+
+								<v-list-item
+									v-for="people in likedPeoples"
+									:key="people.name"
+								>
+									<v-list-item-avatar>
+									<v-img
+										:alt="`${people.name} avatar`"
+										:src="`/ProfilePhato/`+people.phato"
+									></v-img>
+									</v-list-item-avatar>
+
+									<v-list-item-content>
+									<v-list-item-title >
+										<b @click="$router.push({path:`/profile/user/${people.id}`})" class='name black--text' >
+											{{ people.name  }}
+										</b>
+									</v-list-item-title>
+									</v-list-item-content>
+
+									<v-list-item-icon>
+									<v-icon color="primary">
+										mdi-thumb-up
+									</v-icon>
+									</v-list-item-icon>
+								</v-list-item>
+								</v-list>
+					
+							</v-card-text>
+							<v-card-actions>
+								
+							</v-card-actions>
+						</v-card>
+					</v-dialog>
 	        
-		</v-card-title>
+				</v-list-item-icon>
+			</v-list-item>
+		</v-list>
+
+		
 		<!-- Post Content  -->
 		<v-card-text :class="`${post.text_color}--text`">
 			{{ post.content }}
@@ -195,7 +188,7 @@
 			 -->
 	        	<div class="d-flex align-content-center flex-row col-12  border border-light " color="cyan">
 					<!-- ================ Like ===================== -->
-		         	<v-btn  class="col-4 text-center py-5 " @click='Like'  @contextmenu.prevent="WhoLikeMyPost">
+		         	<v-btn text  class="col-4 text-center py-5 " @click='Like'  @contextmenu.prevent="WhoLikeMyPost">
 			         		<v-icon  >
 					            mdi-thumb-up
 					        </v-icon>
@@ -204,7 +197,7 @@
 
 		         	</v-btn>
 					<!--  ================ Comment ================== -->
-					<v-btn class="col-4 text-center py-5 btn-block " v-if="post.comment_open == 1" @click="ShowAllComment">
+					<v-btn text class="col-4 text-center py-5 btn-block " v-if="post.comment_open == 1" @click="ShowAllComment">
 						<v-icon>
 						mdi-message
 					</v-icon>
@@ -214,7 +207,7 @@
 					</v-btn>
 		         	
 					<!-- ================== Share ====================== -->
-		         	<v-btn class="col-4 text-center py-5 " v-if="post.share_open == 1">
+		         	<v-btn text class="col-4 text-center py-5 " v-if="post.share_open == 1">
 		         		<v-icon>
 				            mdi-share-variant
 				        </v-icon>
@@ -240,7 +233,9 @@ import EditPost from '../Posts/EditPost';
 		props:['post'],
 		data(){
 			return {
-				user:localStorage.getItem('user'),
+				user:{
+					id:localStorage.getItem('user_id')
+				},
 				date:{
 					days:null,
 					months:null,
@@ -324,9 +319,10 @@ import EditPost from '../Posts/EditPost';
 				axios.post(`/api/post/save`,data).then((res) => {
 					if(res.data == true){
 						this.$message.success('Post Saved!');
-						this.IfSavePost()
+						
 					}else {
 					}
+					this.IfSavePost()
 				})
 			},
 			UnSavePost(){
@@ -335,12 +331,13 @@ import EditPost from '../Posts/EditPost';
 					save_category_id:this.post.id,
 					save_type:"Post"
 				}
-				axios.post(`/api/post/unsave`,data).then((res) => {
+				axios.post(`/api/comment/unsave`,data).then((res) => {
 					if(res.data == true){
 						this.$message.success('Post Unsaved!');
-						this.IfSavePost()
+						
 					}else {
 					}
+					this.IfSavePost()
 				})
 			},
 			IfSavePost(){
@@ -349,7 +346,7 @@ import EditPost from '../Posts/EditPost';
 					save_category_id:this.post.id,
 					save_type:"Post"
 				}
-				axios.post(`/api/post/ifsave`,data).then((res) => {
+				axios.post(`/api/comment/ifsave`,data).then((res) => {
 					this.save = res.data;
 				})
 			}

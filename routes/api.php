@@ -46,6 +46,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
 	Route::post('/comment/{id}', "CommentsController@show");
 	Route::post('/comment/date/{id}',"CommentsController@Date");
 	Route::post('/comment/user/{id}',"CommentsController@UserData");
+	Route::post('/comment/edit/{id}',"CommentsController@Edit");
+	Route::post('/comment/delete/{id}',"CommentsController@destroy");
+	Route::post('/comment/save/{id}','CommentsController@SaveComment');
+	Route::post('/comment/saves/{id}','CommentsController@SaveComments');
+	Route::post('/comment/unsave/{id}','CommentsController@UnSaveComment');
+	Route::post('/comment/ifsave/{id}','CommentsController@IfSaveComment');
 
 
 	// Profile Details 
@@ -55,6 +61,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 	// Profile View 
 	Route::post('/profile/{id}',"ProfileController@GetUser");
+	Route::post('/user/posts',"PostController@FriPostAll");
 	Route::post('/user/save',"ProfileController@SaveUser");
 	Route::post('/user/unsave',"ProfileController@UnSaveUser");
 	Route::post('/user/ifsave',"ProfileController@IfSaveUser");
@@ -72,6 +79,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 	Route::post('friend/accept',"FriendsController@Accept");
 	Route::post('friend/deny',"FriendsController@deny");
 	Route::post('friend/block',"FriendsController@block");
+	Route::post('friend/ifblock',"FriendsController@ifBlock");
 	Route::post('friend/UnBlock',"FriendsController@unblock");
 	Route::post('friend/unfriend',"FriendsController@Unfriend");
 	Route::post('friend/all-friends',"FriendsController@AllFriends");
@@ -86,7 +94,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 });
   // For Image Uploader Actions 
-Route::post('image-upload', function() {
+Route::post('image-uploader', function() {
     //
 });
 

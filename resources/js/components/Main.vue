@@ -1,6 +1,6 @@
 <template>
   <v-app>
-	  <v-card v-if="login == true">
+	  <v-card v-if="login == true" style="background:#e1e8e3">
 		  <!-- Gocial App Bar   -->
 		<v-app-bar
 		:collapse-on-scroll="collapseOnScroll"
@@ -72,8 +72,9 @@
 		<v-sheet
 		id="scrolling-techniques-6"
 		class="overflow-y-auto my-5 py-5 "
-		max-height="550"
+		max-height="600"
 		max-width="auto"
+		style="background:#e1e8e3"
 		>
 
 		
@@ -152,8 +153,9 @@
                 login:false,
                 collapseOnScroll:true,
 				drawer: false,
-     			 group: null,
-				  post_create:false
+     			group: null,
+				post_create:false,
+				messages:[]
             }
         },
         methods:{
@@ -177,6 +179,16 @@
 			}
         },
         mounted(){
+			Pusher.logToConsole = false;
+
+			var pusher = new Pusher('9cd186a2896120aa501e', {
+			cluster: 'ap1'
+			});
+
+			var channel = pusher.subscribe('my-channel');
+			channel.bind('my-event', function(data) {
+			});
+			
             if(this.token != null){
             this.login = true;
             window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;

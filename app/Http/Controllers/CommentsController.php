@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\User;
+use App\Models\Save;
+use Illuminate\Support\Facades\Auth;
 class CommentsController extends Controller
 {
     /**
@@ -99,9 +101,15 @@ class CommentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function Edit(Request $request,$id)
     {
-        //
+        $comment  = Comment::find($id);
+        $comment->content = $request->content;
+        if($comment->update()){
+            return json_encode(true);
+        }else {
+            return json_encode(false);
+        }
     }
 
     /**
@@ -110,8 +118,81 @@ class CommentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        //
+        if(Auth::user()->id == $request->user_id){
+            $comment = Comment::find($id);
+            if($comment->delete()){
+                return json_encode(true);
+            }else {
+                return json_encode(false);
+            }
+        }
+    }
+
+    public function SaveComment(Request $req){
+        $data = Save::where('user_id',$req->user_id)
+                    ->where('save_category_id',$req->save_category_id)
+                    ->where('save_type',$req->save_type)
+                    ->first();
+        if($data == null){
+            $save = new Save;
+            $save->user_id = $req->user_id;
+            $save->save_category_id = $req->save_category_id;
+            $save->save_type = $req->save_type;
+            if($save->save()){
+                return json_encode(true);
+            }
+        }else {
+            return json_encode(false);
+        }
+        
+    }
+
+    public function UnSaveComment(Request $req){
+        $data = Save::where('user_id',$req->user_id)
+                    ->where('save_category_id',$req->save_category_id)
+                    ->where('save_type',$req->save_type)
+                    ->first();
+        if($data != null){
+            $save = Save::find($data->id);
+            if($save->delete()){
+                return json_encode(true);
+            }
+        }else {
+            return json_encode(false);
+        }
+        
+    }
+
+    public function IfSaveComment(Request $req){
+        $data = Save::where('user_id',$req->user_id)
+                    ->where('save_category_id',$req->save_category_id)
+                    ->where('save_type',$req->save_type)
+                    ->first();
+        if($data == null){
+            return json_encode(false);
+        }else {
+            return json_encode(true);
+        }
+    }
+
+    public function SaveComments($id)
+    {
+        $save = Save::where('user_id', $id)->where('save_type','Post')->get();
+        $posts= array();
+        foreach ($save as $data) {
+            $id = $data->save_category_id;
+            $post = Comment::find( $data->save_category_id);
+            if(Comment::find( $data->save_category_id)){
+               $user_data = array();
+               $user_data['id'] = User::find( $post->user_id)->id;
+               $user_data['name'] = User::find( $post->user_id)->name;
+               $user_data['profile_phato'] = User::find( $post->user_id)->profile_phato;
+               $post['user_data'] =  $user_data; 
+               $posts[] = $post;
+            }
+        }
+        return $posts;
     }
 }
