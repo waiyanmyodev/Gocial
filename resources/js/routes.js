@@ -5,6 +5,7 @@ import Friends from './components/User/Friends';
 import NewFeed from './components/Layouts/NewFeed/NewFeed';
 import SaveItemFeed from './components/Layouts/Save/SaveItemFeed';
 import Setting from './components/Layouts/Setting/Setting';
+import Messenger from './components/Messenger/Main';
 export default {
 	mode:'history',
 	routes:[
@@ -41,6 +42,12 @@ export default {
 			path:'/setting',
 			name:'setting',
 			component:Setting
+		},
+
+		{
+			path:'/messenger',
+			name:'messenger',
+			component:Messenger
 		},
 	]
 }

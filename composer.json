@@ -12,8 +12,6 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4",
         "multicaret/laravel-acquaintances": "^3.5",
-        "munafio/chatify": "^1.5",
-        "musonza/chat": "^6.0",
         "pusher/pusher-php-server": "^7.0"
     },
     "require-dev": {

@@ -30,6 +30,8 @@
         "element-ui": "^2.15.8",
         "laravel-echo": "^1.13.0",
         "mix": "^0.0.1",
+        "vue-advanced-chat": "^1.5.7",
+        "vue-chat-scroll": "^1.4.0",
         "vue-router": "^2.8.1",
         "vuetify": "^2.6.4",
         "vuetify-image-input": "^19.2.2"

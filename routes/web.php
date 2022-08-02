@@ -23,4 +23,4 @@ Route::get('/test', function () {
 });
 
 
-
+Route::get('/tester',"TestController@Test");

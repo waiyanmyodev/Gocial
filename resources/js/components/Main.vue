@@ -39,7 +39,7 @@
 		<!-- Message Box  -->
 		<div class="justify-content-start align-item-start py-3  ">
 			<div class="col-5">
-				<v-btn olor="black" icon outlined text>
+				<v-btn olor="black" icon outlined text @click="$router.push(`/messenger`)">
 					<v-icon>mdi-forum</v-icon>
 				</v-btn>
 			</div>
@@ -192,14 +192,17 @@
             if(this.token != null){
             this.login = true;
             window.axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+
             axios.post(`/api/user`).then((response) => {
               this.user =  response.data;
-
+				
               localStorage.setItem('user_email',this.user.email)
               localStorage.setItem('user_name',this.user.name);
               localStorage.setItem('user_profile_phato',this.user.profile_phato);
               localStorage.setItem('user_id',response.data.id)
             });
+			
+		
         }
         
         },

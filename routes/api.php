@@ -25,34 +25,42 @@ Route::post('/login',"Auth\AuthController@login" );
 
 Route::middleware(['auth:sanctum'])->group(function () {
 	// Post 
-	Route::post('/post/create', 'PostController@create');
-	Route::post('/post/update', 'PostController@update');
-	Route::post('/post/save', 'PostController@SavePost');
-	Route::post('/post/save/{id}', 'PostController@SavePosts');
-	Route::post('/post/unsave', 'PostController@UnSavePost');
-	Route::post('/post/ifsave', 'PostController@IfSavePost');
-	Route::post('/post/{id}/delete',"PostController@destroy");
-	Route::post('/post/edit',"PostController@edit");
-	Route::post('/post/date/{id}', "PostController@date");
-	Route::post('/post/user/{id}',"PostController@userData");
-	Route::post('/post/{id}', "PostController@PostAll");
-	Route::post('/post/iflike/{id}/{user_id}', "PostController@ifLike");
-	Route::post('/post/like/{id}/{user_id}', "PostController@Like");
-	Route::post('/post/unlike/{id}/{user_id}', "PostController@UnLike");
-	Route::post('/post/like/{id}', "PostController@whoLikedThePost");
+	
+	Route::group(['prefix' => 'post'], function() {
+		Route::post('/create', 'PostController@create');
+		Route::post('/update', 'PostController@update');
+		Route::post('/save', 'PostController@SavePost');
+		Route::post('/save/{id}', 'PostController@SavePosts');
+		Route::post('/unsave', 'PostController@UnSavePost');
+		Route::post('/ifsave', 'PostController@IfSavePost');
+		Route::post('/{id}/delete',"PostController@destroy");
+		Route::post('/edit',"PostController@edit");
+		Route::post('/date/{id}', "PostController@date");
+		Route::post('/user/{id}',"PostController@userData");
+		Route::post('/{id}', "PostController@PostAll");
+		Route::post('/iflike/{id}/{user_id}', "PostController@ifLike");
+		Route::post('/like/{id}/{user_id}', "PostController@Like");
+		Route::post('/unlike/{id}/{user_id}', "PostController@UnLike");
+		Route::post('/like/{id}', "PostController@whoLikedThePost");
+	});
+	
 
 	// Comment 
-	Route::post('/comment/create', "CommentsController@create");
-	Route::post('/comment/{id}', "CommentsController@show");
-	Route::post('/comment/date/{id}',"CommentsController@Date");
-	Route::post('/comment/user/{id}',"CommentsController@UserData");
-	Route::post('/comment/edit/{id}',"CommentsController@Edit");
-	Route::post('/comment/delete/{id}',"CommentsController@destroy");
-	Route::post('/comment/save/{id}','CommentsController@SaveComment');
-	Route::post('/comment/saves/{id}','CommentsController@SaveComments');
-	Route::post('/comment/unsave/{id}','CommentsController@UnSaveComment');
-	Route::post('/comment/ifsave/{id}','CommentsController@IfSaveComment');
-
+	
+	Route::group(['prefix' => 'comment'], function() {
+		Route::post('/create', "CommentsController@create");
+		Route::post('/{id}', "CommentsController@show");
+		Route::post('/date/{id}',"CommentsController@Date");
+		Route::post('/user/{id}',"CommentsController@UserData");
+		Route::post('/edit/{id}',"CommentsController@Edit");
+		Route::post('/delete/{id}',"CommentsController@destroy");
+		Route::post('/save/{id}','CommentsController@SaveComment');
+		Route::post('/saves/{id}','CommentsController@SaveComments');
+		Route::post('/unsave/{id}','CommentsController@UnSaveComment');
+		Route::post('/ifsave/{id}','CommentsController@IfSaveComment');
+	});
+	
+	
 
 	// Profile Details 
 	Route::post('/detail-add',"DetailsController@create" );
@@ -71,30 +79,48 @@ Route::middleware(['auth:sanctum'])->group(function () {
 	
 
 	// Friends
-	Route::post('friend/add',"FriendsController@AddTo");
-	Route::post('friend/is-pendding',"FriendsController@isPendding");
-	Route::post('friend/is-request',"FriendsController@ifRequest");
-	Route::post('friend/get-fri-req',"FriendsController@getFriendRequests");
-	Route::post('friend/get-fri-pending',"FriendsController@GetPendingFriendships");
-	Route::post('friend/accept',"FriendsController@Accept");
-	Route::post('friend/deny',"FriendsController@deny");
-	Route::post('friend/block',"FriendsController@block");
-	Route::post('friend/ifblock',"FriendsController@ifBlock");
-	Route::post('friend/UnBlock',"FriendsController@unblock");
-	Route::post('friend/unfriend',"FriendsController@Unfriend");
-	Route::post('friend/all-friends',"FriendsController@AllFriends");
-	Route::post('friend/get-friends-count',"FriendsController@GetFriendsCount");
-	Route::post('friend/block-list',"FriendsController@BlockList");
-	Route::post('friend/is-friend',"FriendsController@isFriendWith");
-	Route::post('friend/matual-fri',"FriendsController@GetMutualFriends");
+	
+	Route::group(['prefix' => 'friend'], function() {
+		Route::post('/add',"FriendsController@AddTo");
+		Route::post('/is-pendding',"FriendsController@isPendding");
+		Route::post('/is-request',"FriendsController@ifRequest");
+		Route::post('/get-fri-req',"FriendsController@getFriendRequests");
+		Route::post('/get-fri-pending',"FriendsController@GetPendingFriendships");
+		Route::post('/accept',"FriendsController@Accept");
+		Route::post('/deny',"FriendsController@deny");
+		Route::post('/block',"FriendsController@block");
+		Route::post('/ifblock',"FriendsController@ifBlock");
+		Route::post('/UnBlock',"FriendsController@unblock");
+		Route::post('/unfriend',"FriendsController@Unfriend");
+		Route::post('/all-friends',"FriendsController@AllFriends");
+		Route::post('/get-friends-count',"FriendsController@GetFriendsCount");
+		Route::post('/block-list',"FriendsController@BlockList");
+		Route::post('/is-friend',"FriendsController@isFriendWith");
+		Route::post('/matual-fri',"FriendsController@GetMutualFriends");
+	});
+	
 	
 	// New Feed 
 	Route::post('new-feed',"NewFeedController@GetPost");
+	
 
+	// Messenger 
+	Route::group(['prefix' => 'messenger'], function() {
+		
+		Route::post('send',"MessagesController@send");
+		Route::post('get',"MessagesController@get");
+		Route::post('delete',"MessagesController@delete");
+		Route::post('friends',"MessagesController@Friends");
+		
+	});
+	
 
 });
   // For Image Uploader Actions 
 Route::post('image-uploader', function() {
     //
 });
+
+
+
 

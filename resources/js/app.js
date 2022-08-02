@@ -8,7 +8,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import locale from 'element-ui/lib/locale/lang/en'
 import vuetify from './vuetify';
+import VueChatScroll from 'vue-chat-scroll'
 
+Vue.use(VueChatScroll)
 Vue.use(VueRoute);
 Vue.use(ElementUI, { locale })
 
@@ -20,6 +22,9 @@ const app = new Vue({
     el: '#app',
     vuetify,
     router: new VueRoute(routes),
+    mounted(){
+
+    }
     
 });
 // https://www.devopinion.com/friendship-system-for-social-site-in-laravel/
